@@ -121,10 +121,10 @@ class TrendReq(object):
                     requests.exceptions.ConnectTimeout,
                     requests.exceptions.Timeout,
                 ):
-                    print("Proxy error, changing IP.")
+                    # print("Proxy error, changing IP.")
                     if len(self.proxies) > 1:
                         self.proxies.remove(self.proxies[self.proxy_index])
-                        print(f"{len(self.proxies)} proxies remaining...")
+                        # print(f"{len(self.proxies)} proxies remaining...")
                     else:
                         print("No more proxies available. Bye!")
                         raise
