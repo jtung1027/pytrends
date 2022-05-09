@@ -119,6 +119,7 @@ class TrendReq(object):
                 except (
                     requests.exceptions.ProxyError,
                     requests.exceptions.ConnectTimeout,
+                    requests.exceptions.Timeout,
                 ) as e:
                     print(f"Proxy error, changing IP:\n\n{e}")
                     if len(self.proxies) > 1:
