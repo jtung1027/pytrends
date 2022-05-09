@@ -91,7 +91,7 @@ class TrendReq(object):
                                     geo=self.hl[-2:]
                                 ),
                                 timeout=self.timeout,
-                                **self.requests_args
+                                **self.requests_args,
                             ).cookies.items(),
                         )
                     )
@@ -112,12 +112,15 @@ class TrendReq(object):
                                 ),
                                 timeout=self.timeout,
                                 proxies=proxy,
-                                **self.requests_args
+                                **self.requests_args,
                             ).cookies.items(),
                         )
                     )
-                except requests.exceptions.ProxyError:
-                    print("Proxy error. Changing IP")
+                except (
+                    requests.exceptions.ProxyError,
+                    requests.exceptions.ConnectTimeout,
+                ) as e:
+                    print(f"Proxy error, changing IP:\n\n{e}")
                     if len(self.proxies) > 1:
                         self.proxies.remove(self.proxies[self.proxy_index])
                     else:
@@ -166,7 +169,7 @@ class TrendReq(object):
                 timeout=self.timeout,
                 cookies=self.cookies,
                 **kwargs,
-                **self.requests_args
+                **self.requests_args,
             )  # DO NOT USE retries or backoff_factor here
         else:
             response = s.get(
@@ -174,7 +177,7 @@ class TrendReq(object):
                 timeout=self.timeout,
                 cookies=self.cookies,
                 **kwargs,
-                **self.requests_args
+                **self.requests_args,
             )  # DO NOT USE retries or backoff_factor here
         # check if the response contains json and throw an exception otherwise
         # Google mostly sends 'application/json' in the Content-Type header,
@@ -469,7 +472,7 @@ class TrendReq(object):
         req_json = self._get_data(
             url=TrendReq.TRENDING_SEARCHES_URL,
             method=TrendReq.GET_METHOD,
-            **self.requests_args
+            **self.requests_args,
         )[pn]
         result_df = pd.DataFrame(req_json)
         return result_df
@@ -482,7 +485,7 @@ class TrendReq(object):
             method=TrendReq.GET_METHOD,
             trim_chars=5,
             params=forms,
-            **self.requests_args
+            **self.requests_args,
         )["default"]["trendingSearchesDays"][0]["trendingSearches"]
         result_df = pd.DataFrame()
         # parse the returned json
@@ -567,7 +570,7 @@ class TrendReq(object):
             method=TrendReq.GET_METHOD,
             trim_chars=5,
             params=chart_payload,
-            **self.requests_args
+            **self.requests_args,
         )
         try:
             df = pd.DataFrame(req_json["topCharts"][0]["listItems"])
@@ -587,7 +590,7 @@ class TrendReq(object):
             params=parameters,
             method=TrendReq.GET_METHOD,
             trim_chars=5,
-            **self.requests_args
+            **self.requests_args,
         )["default"]["topics"]
         return req_json
 
@@ -601,7 +604,7 @@ class TrendReq(object):
             params=params,
             method=TrendReq.GET_METHOD,
             trim_chars=5,
-            **self.requests_args
+            **self.requests_args,
         )
         return req_json
 
