@@ -9,7 +9,6 @@ from pandas.io.json._normalize import nested_to_record
 from pytrends import exceptions
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-from tenacity import retry, stop_after_attempt
 
 
 class TrendReq(object):
@@ -259,7 +258,6 @@ class TrendReq(object):
                 self.related_queries_widget_list.append(widget)
         return
 
-    @retry(stop=stop_after_attempt(7))
     def interest_over_time(self):
         """Request data from Google's Interest Over Time section and return a dataframe"""
 
