@@ -143,3 +143,7 @@ ENV/
 
 # VSCode
 .vscode/
+
+# Vim files
+*~
+*.swp
